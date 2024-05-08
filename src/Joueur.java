@@ -1,0 +1,18 @@
+public class Joueur {
+    private String nom;
+    private boolean plusdunepropriete;
+    private int argent;
+    public Joueur(String nom) {
+        this.nom = nom;
+        this.argent = 500;
+    }
+    public boolean getnmbpropriete(){
+        return plusdunepropriete;
+    }
+    public int getArgent(){
+        return argent;
+    }
+    public void setArgent(int montant) {
+        argent += montant;
+    }
+}
