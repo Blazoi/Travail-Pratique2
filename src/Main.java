@@ -1,23 +1,9 @@
-import ca.qc.bdeb.sim202.tp2.DePipe;
-
 import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        try (RandomAccessFile rdm = new RandomAccessFile("src/plateau.bin","rw")){
-            while (true) {
-                System.out.println(rdm.readUTF());
-
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        tab();
     }
 
     public static void menu() {
@@ -27,7 +13,7 @@ public class Main {
         System.out.println("1- Jouer une nouvelle partie.");
         System.out.println("2- Charger une partie précédente.");
         System.out.println("3- Quitter le jeu.");
-        int choix = 1; // = sc.nextInt();
+        int choix = sc.nextInt();
         while (choix != 1 && choix != 2 && choix != 3) {
             System.out.println("Veuillez saisir une entrée valide");
             choix = sc.nextInt();
@@ -36,18 +22,17 @@ public class Main {
         switch (choix) {
             case 1:
                 System.out.println("Entrez le nom du fichier binaire.");
-                String nomfichier = sc.next();
+                String nomfichier = "src/plateau.bin";//sc.next();
                 //Vérification du nom du fichier
-                if (!nomfichier.endsWith(".bin")) {
-                    nomfichier = nomfichier + ".bin";
-                }
-                if (!nomfichier.startsWith("src/")) {
-                    nomfichier = "src/" + nomfichier;
-                }
+//                if (!nomfichier.endsWith(".bin")) {
+//                    nomfichier = nomfichier + ".bin";
+//                }
+//                if (!nomfichier.startsWith("src/")) {
+//                    nomfichier = "src/" + nomfichier;
+//                }
                 try {
                     DataInputStream reader = new DataInputStream(new FileInputStream(nomfichier));
                     System.out.println(reader.read());
-
 
 
                 } catch (FileNotFoundException f) {
@@ -73,10 +58,31 @@ public class Main {
     }
 
     public static void tab() {
-        try (RandomAccessFile rdm = new RandomAccessFile("src/plateau.bin","rw")){
-            System.out.println(rdm.read());
-
-
+        try (DataInputStream reader = new DataInputStream(new FileInputStream("src/plateau.bin"))) {
+            while (true) {
+                String s = reader.readUTF();
+                switch (s) {
+                    case "D", "Tx", "P":
+                        System.out.println(s);
+                        System.out.println(reader.readUTF());
+                        System.out.println(reader.readUTF());
+                        System.out.println(reader.readInt());
+                        System.out.println();
+                        break;
+                    case "SP":
+                        System.out.println(s);
+                        System.out.println(reader.readUTF());
+                        System.out.println("Valeur : " + reader.readInt());
+                        System.out.println("Loyer : Valeur du dé * 10");
+                        System.out.println();
+                    case "T":
+                        System.out.println(s);
+                        System.out.println(reader.readUTF());
+                        System.out.println("Valeur : " + reader.readInt());
+                        System.out.println("Loyer : " + reader.readInt());
+                        System.out.println();
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

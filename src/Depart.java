@@ -1,7 +1,8 @@
-public class Depart extends Case{
+public class Depart extends Case {
     private String description;
-    public Depart(String type, String nom, int montantarecevoir, String description){
-        super(type, nom, montantarecevoir);
-        this.description = description;
+
+    public Depart(String type, String nom, String description, int montantarecevoir) {
+        super(type, nom, description, 0, montantarecevoir);
+//        this.description = description;
     }
 }

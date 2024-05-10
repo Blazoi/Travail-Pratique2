@@ -1,4 +1,6 @@
-public class Joueur {
+import java.io.Serializable;
+
+public class Joueur implements Serializable {
     private String nom;
     private boolean plusdunepropriete;
     private int argent;

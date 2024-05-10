@@ -1,7 +1,7 @@
 public class Terrains extends Propriete {
     private int valeur;
-    public Terrains(String type, String proprietaire, String nom, int prix, int loyer, int valeur){
-        super(type, proprietaire, nom, prix, loyer);
+    public Terrains(String type, String nom, int valeur, int loyer, String proprietaire, int prix){
+        super(type, nom ,valeur, loyer, proprietaire,prix);
         this.valeur = valeur;
     }
 }
