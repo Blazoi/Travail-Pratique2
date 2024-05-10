@@ -6,7 +6,7 @@ public abstract class Propriete extends Case {
     private int prix;
     private int loyer;
 
-    public Propriete(String type, String nom, int valeur, int loyer, String proprietaire, int prix) {
+    public Propriete(String type, String nom, int valeur, int loyer) {
         super(type, nom, "", valeur, loyer);
         this.valeur = valeur;
         this.prix = prix;

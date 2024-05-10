@@ -8,7 +8,7 @@ import java.util.Random;
 public class DePipe {
     private int dernierevaleur;
 
-    private static Random random = new Random(7);
+    private static Random random = new Random();
     
     /**
      * Il n'est pas nécessaire d'instancier la classe ca.qc.bdeb.sim202.tp2.DePipe pour utiliser cette méthode
