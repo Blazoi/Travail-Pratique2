@@ -18,4 +18,12 @@ public abstract class Propriete extends Case {
         }
         return loyer;
     }
+
+    public int getPrix() {
+        return prix;
+    }
+
+    public int getLoyer() {
+        return loyer;
+    }
 }
