@@ -4,7 +4,7 @@ public class Joueur implements Serializable {
     private String nom;
     private boolean plusdunepropriete = false;
     private int argent;
-    private boolean estPremierJoueur;
+    private boolean estPremierJoueur = false;
     public Joueur(String nom) {
         this.nom = nom;
         this.argent = 500;
@@ -21,5 +21,8 @@ public class Joueur implements Serializable {
     }
     public boolean estPremierJoueur() {
         return estPremierJoueur;
+    }
+    public void setPremierJoueur(boolean bool) {
+        estPremierJoueur = true;
     }
 }
