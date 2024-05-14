@@ -6,8 +6,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
         Case[] rnd = new Case[2];
-        tourmenu(new DePipe(), rnd, new Joueur(""));
+        LinkedList<Joueur> liste = new LinkedList<>();
+        tourmenu(new DePipe(), rnd, new Joueur(""), liste);
         menu();
     }
 
@@ -18,7 +20,7 @@ public class Main {
         System.out.println("1- Jouer une nouvelle partie.");
         System.out.println("2- Charger une partie précédente.");
         System.out.println("3- Quitter le jeu.");
-        int choix = 1;
+        int choix = sc.nextInt();
         while (choix != 1 && choix != 2 && choix != 3) {
             System.out.println("Veuillez saisir une entrée valide");
             choix = sc.nextInt();
@@ -27,20 +29,21 @@ public class Main {
         switch (choix) {
             case 1:
                 System.out.println("Entrez le nom du fichier binaire.");
-                String nomfichier = "src/plateau.bin";//sc.next();
+                String nomfichier = sc.next();
                 //Vérification du nom du fichier
-//                if (!nomfichier.endsWith(".bin")) {
-//                    nomfichier = nomfichier + ".bin";
-//                }
-//                if (!nomfichier.startsWith("src/")) {
-//                    nomfichier = "src/" + nomfichier;
-//                }
+                if (!nomfichier.endsWith(".bin")) {
+                    nomfichier = nomfichier + ".bin";
+                }
+                if (!nomfichier.startsWith("src/")) {
+                    nomfichier = "src/" + nomfichier;
+                }
                 jouer("src/plateau.bin");
 
                 break;
             case 2:
                 break;
             case 3:
+                quitter();
                 break;
         }
 
@@ -49,36 +52,75 @@ public class Main {
     public static void jouer(String nomfichier) {
         //Initialiser le plateau
         Case[] plateau = initialiserTableau(nomfichier);
+        if (validerPlateau(plateau)) {
 
-        //Initialiser les joueurs
-        LinkedList<Joueur> liste = listeDeJoueurs();
-        while (true) {
-            tourmenu(new DePipe(), plateau, liste.get(0));
-            liste.add(liste.get(0));
-            liste.remove(0);
+            //Initialiser les joueurs
+            LinkedList<Joueur> liste = listeDeJoueurs();
+            while (true) {
+                tourmenu(new DePipe(), plateau, liste.get(0), liste);
+                liste.add(liste.get(0));
+                liste.remove(0);
+            }
+        } else {
+            System.err.println("Le fichier binaire du plateau n'est pas valide");
         }
     }
-    public static Case[] initialiserTableau(String nomfichier){
+
+    private static boolean validerPlateau(Case[] plateau) {
+        boolean departValide = true;
+        boolean auMoinsUnTx = false;
+        boolean auMoinsUnP = false;
+        boolean auMoinsUnSP = false;
+        boolean auMoinsUnT = false;
+        for (int i = 0; i < 15; i++) {
+            if (plateau[0].getType() != "D") {
+                departValide = false;
+            }
+            if (i > 0) {
+                if (plateau[i].getType() == "D") {
+                    departValide = false;
+                }
+            }
+            switch (plateau[i].getType()) {
+                case "Tx":
+                    auMoinsUnTx = true;
+                    break;
+                case "P":
+                    auMoinsUnP = true;
+                    break;
+                case "SP":
+                    auMoinsUnSP = true;
+                    break;
+                case "T":
+                    auMoinsUnT = true;
+                    break;
+            }
+        }
+        return departValide && auMoinsUnTx && auMoinsUnP && auMoinsUnSP && auMoinsUnT;
+
+    }
+
+    public static Case[] initialiserTableau(String nomfichier) {
         Case[] plateau = new Case[15];
         try {
             DataInputStream reader = new DataInputStream(new FileInputStream(nomfichier));
             for (int i = 0; i < 15; i++) {
-                String s = reader.readUTF();
-                switch (s) {
+                String typeDeCase = reader.readUTF();
+                switch (typeDeCase) {
                     case "D" -> {
-                        plateau[i] = new Depart(s, reader.readUTF(), reader.readUTF(), reader.readInt());
+                        plateau[i] = new Depart("D", reader.readUTF(), reader.readUTF(), reader.readInt());
                     }
                     case "Tx" -> {
-                        plateau[i] = new Taxe(s, reader.readUTF(), reader.readUTF(), reader.readInt());
+                        plateau[i] = new Taxe("Tx", reader.readUTF(), reader.readUTF(), reader.readInt());
                     }
                     case "P" -> {
-                        plateau[i] = new Stationnement(s, reader.readUTF(), reader.readUTF(), reader.readInt());
+                        plateau[i] = new Stationnement("P", reader.readUTF(), reader.readUTF(), reader.readInt());
                     }
                     case "SP" -> {
-                        plateau[i] = new Servicepublic(s, reader.readUTF(), reader.readInt());
+                        plateau[i] = new Servicepublic("SP", reader.readUTF(), reader.readInt());
                     }
                     case "T" -> {
-                        plateau[i] = new Terrains(s, reader.readUTF(), reader.readInt(), reader.readInt());
+                        plateau[i] = new Terrains("T", reader.readUTF(), reader.readInt(), reader.readInt());
 
                     }
                 }
@@ -88,7 +130,6 @@ public class Main {
         }
         return plateau;
     }
-
 
 
     public static LinkedList<Joueur> listeDeJoueurs() {
@@ -103,7 +144,7 @@ public class Main {
             //Minimum de 2 joueurs
             if (ligne.isBlank()) {
                 if (nmbdejoueurs < 2) {
-                    System.out.println("Vous avex besoin d'au moins 2 joueurs.");
+                    System.out.println("Vous avez besoin d'au moins 2 joueurs.");
                     nmbdejoueurs--;
                 } else {
                     return liste;
@@ -117,28 +158,92 @@ public class Main {
         return liste;
     }
 
-    public static void tourmenu(DePipe de, Case[] plateau, Joueur joueur) {
+    public static void tourmenu(DePipe de, Case[] plateau, Joueur joueur, LinkedList<Joueur> liste) {
+
+//        afficherPlateau(plateau);
+
+//        afficherJoueurs(liste);
+
+        System.out.println("\033[93mC'est à " + joueur + " de jouer\033[39m");
+        System.out.println();
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Lancer le dé en appuyant sur « \033[94mEntrée\033[39m ».");
-        System.out.println("\033[94mQ\033[39muitter la partie.");
-        System.out.println("\033[94mM\033[39mettre fin à la partie.");
+        System.out.println("Quitter la partie ( \033[94mQ\033[39m )");
+        System.out.println("Mettre fin à la partie ( \033[94mM\033[39m )");
         String choix = sc.nextLine();
 
-        if (choix.isBlank()) {
-            de.lancer();
-            System.out.println("Le dé est tombé sur " + de.getDernierevaleur() + "!");
-            avancer(plateau, de.getDernierevaleur(), joueur);
+        // validation du choix de l'utilisateur
+        while (!choix.equals("") && !choix.equalsIgnoreCase("q") && !choix.equalsIgnoreCase("m")) {
+            System.out.println("Veuillez saisir une entrée valide");
+            choix = sc.nextLine();
+        }
+        switch (choix.toLowerCase()) {
+            case "q":
+                quitter();
+                break;
+            case "m":
+                break;
+            case "":
+                de.lancer();
+                System.out.println("Le dé est tombé sur " + de.getDernierevaleur() + "!");
+                avancer(plateau, de.getDernierevaleur(), joueur);
+                break;
 
-            return;
-        } else if (choix.equalsIgnoreCase("Q")) {
-
-        } else if (choix.equalsIgnoreCase("M")) {
 
         }
-    }
-    public static void avancer(Case[] plateau, int resultatde, Joueur joueur){
 
     }
+
+    private static void afficherJoueurs(LinkedList<Joueur> liste) {
+        System.out.println("\033[96m************** Les Joueurs **************");
+        for (int i = 0; i < liste.size(); i++) {
+            System.out.print(liste.get(i));
+            //case
+            //argent
+        }
+
+
+    }
+
+    private static void afficherPlateau(Case[] plateau) {
+        System.out.println("\033[95m************** Le Plateau **************");
+        for (int i = 0; i < 15; i++) {
+            if (plateau[i].getType() == "D" || plateau[i].getType() == "Tx") {
+
+                System.out.println(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getDescription() + " "
+                        + plateau[i].getMontantdelacase());
+
+            } else if (plateau[i].getType() == "P") {
+
+                System.out.println(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getDescription());
+
+            } else if (plateau[i].getType() == "SP" || plateau[i].getType() == "T") {
+
+                System.out.print(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getPrix() + " "
+                        + plateau[i].getLoyer());
+                //proprietaire
+                System.out.println();
+
+            }
+        }
+        System.out.println("\033[39m");
+    }
+
+
+    private static void quitter() {
+        System.out.println("""
+                Vous avez quitté Montrealopoly
+                Merci d'avoir joué!
+                """);
+        System.exit(0);
+    }
+
+    public static void avancer(Case[] plateau, int resultatde, Joueur joueur) {
+
+
+    }
+
 //    public static void tab() {
 //        try (DataInputStream reader = new DataInputStream(new FileInputStream("src/plateau.bin"))) {
 //            int i = 1;
