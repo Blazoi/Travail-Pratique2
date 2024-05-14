@@ -58,8 +58,7 @@ public class Main {
             LinkedList<Joueur> liste = listeDeJoueurs();
             while (true) {
                 tourmenu(new DePipe(), plateau, liste.get(0), liste);
-                liste.add(liste.get(0));
-                liste.remove(0);
+                liste.addLast(liste.pop());
             }
         } else {
             System.err.println("Le fichier binaire du plateau n'est pas valide");
@@ -161,7 +160,9 @@ public class Main {
     public static void tourmenu(DePipe de, Case[] plateau, Joueur joueur, LinkedList<Joueur> liste) {
 
 //        afficherPlateau(plateau);
-
+        if (joueur.estPremierJoueur()){
+            afficherPlateau(plateau);
+        }
 //        afficherJoueurs(liste);
 
         System.out.println("\033[93mC'est à " + joueur + " de jouer\033[39m");
