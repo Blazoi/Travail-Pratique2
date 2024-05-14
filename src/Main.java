@@ -139,7 +139,7 @@ public class Main {
             //Nom du joueur
             System.out.print("Joueur " + (nmbdejoueurs + 1) + ": ");
             String ligne = sc.nextLine();
-
+            
             //Minimum de 2 joueurs
             if (ligne.isBlank()) {
                 if (nmbdejoueurs < 2) {
@@ -154,6 +154,7 @@ public class Main {
             liste.add(new Joueur(ligne));
             nmbdejoueurs++;
         }
+        liste.get(0).setPremierJoueur(true);
         return liste;
     }
 
