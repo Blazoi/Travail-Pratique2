@@ -30,7 +30,7 @@ public class Joueur implements Serializable {
         argent += montant;
     }
     public void retirerArgent(int montant) {
-        argent += montant;
+        argent -= montant;
     }
     public boolean estPremierJoueur() {
         return estPremierJoueur;

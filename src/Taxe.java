@@ -7,17 +7,9 @@ public class Taxe extends Case {
         this.description = description;
         this.taxe = montantapayer;
     }
-//    public void getTaxe(){
-//        super.getTaxe(taxe);
-//    }
 
     @Override
-    public void setUnProprietaire(Joueur joueur) {
-
-    }
-
-    @Override
-    public void setProprietaire(Joueur joueur) {
-
+    public void payerTaxe(Joueur joueur) {
+        joueur.retirerArgent(taxe);
     }
 }

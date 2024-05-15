@@ -2,6 +2,7 @@ public abstract class Case {
     private final String type;
     private String nom;
     private String description;
+    private Joueur proprietaire;
     private int montantdelacase;
     private boolean aUnProprietaire = false;
     public Case (String type, String nom, String description, int valeur, int montantapayer){
@@ -23,19 +24,15 @@ public abstract class Case {
         return montantdelacase;
     }
 
-    public abstract void setUnProprietaire(Joueur joueur);
-
-    public abstract void setProprietaire(Joueur joueur);
-
     public int getPrix() {
         return 0;
     }
     public int getLoyer() {
         return 0;
     }
-//    public int getTaxe(int taxe){return taxe;}
-    public void setProprietaire(){};
-    public void setaUnProprietaire(boolean bool){aUnProprietaire = bool;}
+    public Joueur getProprietaire(){return proprietaire;}
+    public void setProprietaire(Joueur joueur){ proprietaire = joueur;};
+    public void aUnProprietaire(){aUnProprietaire = true;}
     public boolean getaUnProprietaire() {
         return aUnProprietaire;
     }
@@ -51,5 +48,7 @@ public abstract class Case {
             joueur.setMort();
         }
     }
+    public void payerTaxe(Joueur joueur){};
+    public void payerStationnement(Joueur joueur){};
 
 }

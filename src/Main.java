@@ -131,7 +131,6 @@ public class Main {
         return plateau;
     }
 
-
     public static LinkedList<Joueur> listeDeJoueurs() {
         Scanner sc = new Scanner(System.in);
         LinkedList<Joueur> liste = new LinkedList<Joueur>();
@@ -167,7 +166,6 @@ public class Main {
         if (joueur.estPremierJoueur()) {
             afficherPlateau(plateau);
         }
-//        afficherJoueurs(liste);
 
         System.out.println("\033[93mC'est à " + joueur.getNom() + " de jouer\033[39m");
         System.out.println();
@@ -179,7 +177,7 @@ public class Main {
         String choix = sc.nextLine();
 
         // validation du choix de l'utilisateur
-        while (!choix.equals("") && !choix.equalsIgnoreCase("q") && !choix.equalsIgnoreCase("m")) {
+        while (!choix.isEmpty() && !choix.equalsIgnoreCase("q") && !choix.equalsIgnoreCase("m")) {
             System.out.println("Veuillez saisir une entrée valide");
             choix = sc.nextLine();
         }
@@ -201,12 +199,14 @@ public class Main {
 
     }
 
-    private static void afficherJoueurs(LinkedList<Joueur> liste) {
+    private static void afficherJoueurs(LinkedList<Joueur> joueurs, Case[] plateau) {
         System.out.println("\033[96m************** Les Joueurs **************");
-        for (int i = 0; i < liste.size(); i++) {
-            System.out.print(liste.get(i));
+        for (int i = 0; i < joueurs.size(); i++) {
+            System.out.print(joueurs.get(i).getNom() + " : ");
             //case
+            System.out.println(plateau[joueurs.get(i).getPosition()].getNom());
             //argent
+            System.out.println("Il possède $" + joueurs.get(i).getArgent() + ".");
         }
 
 
@@ -215,31 +215,33 @@ public class Main {
     private static void afficherPlateau(Case[] plateau) {
         System.out.println("\033[95m************** Le Plateau **************");
         for (int i = 0; i < 15; i++) {
-
-
-
-
-            if (plateau[i].getType() == "D" || plateau[i].getType() == "Tx") {
-
-                System.out.println(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getDescription() + " "
-                        + plateau[i].getMontantdelacase());
-
-            } else if (plateau[i].getType() == "P") {
-
-                System.out.println(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getDescription());
-
-            } else if (plateau[i].getType() == "SP" || plateau[i].getType() == "T") {
-
-                System.out.print(i + 1 + " : " + plateau[i].getNom() + " " + plateau[i].getPrix() + " "
-                        + plateau[i].getLoyer());
-                //proprietaire
-                System.out.println();
-
+            String type = plateau[i].getType();
+            switch (type) {
+                case "D", "Tx", "P" -> {
+                    System.out.println(type);
+                    System.out.println(plateau[i].getNom());
+                    System.out.println(plateau[i].getDescription());
+                    System.out.println(plateau[i].getMontantdelacase());
+                    System.out.println();
+                }
+                case "SP" -> {
+                    System.out.println(type);
+                    System.out.println(plateau[i].getNom());
+                    System.out.println("Valeur : " + plateau[i].getPrix());
+                    System.out.println("Loyer : Valeur du dé * 10");
+                    System.out.println();
+                }
+                case "T" -> {
+                    System.out.println(type);
+                    System.out.println(plateau[i].getNom());
+                    System.out.println("Valeur : " + plateau[i].getPrix());
+                    System.out.println("Loyer : " + plateau[i].getLoyer());
+                    System.out.println();
+                }
             }
         }
         System.out.println("\033[39m");
     }
-
 
     private static void quitter() {
         System.out.println("""
@@ -254,36 +256,96 @@ public class Main {
         //Switch pour déterminer les actions selon la case
         //D-Gagner de l'argent
         //Le reste - Perdre de l'argent
-        for (int i = joueur.getPosition(); i != joueur.getPosition() + resultatde; i++) {
+        int positionfinale = 0;
+        if (joueur.getPosition() + resultatde <= plateau.length) {
+            positionfinale = joueur.getPosition() + resultatde;
+        } else {
+            positionfinale = (joueur.getPosition() + resultatde) - plateau.length;
+        }
+        for (int i = joueur.getPosition(); i != positionfinale; i++) {
             joueur.setPosition(joueur.getPosition() + 1);
-            String type = plateau[i].getType();
-                switch (type) {
-                    case "D", "Tx", "P" -> {
-                        System.out.println(type);
-                        System.out.println(plateau[i].getNom());
-                        System.out.println(plateau[i].getDescription());
-                        System.out.println(plateau[i].getMontantdelacase());
-                        System.out.println();
-                    }
-                    case "SP" -> {
-                        System.out.println(type);
-                        System.out.println(plateau[i].getNom());
-                        System.out.println("Valeur : " + plateau[i].getPrix());
-                        System.out.println("Loyer : Valeur du dé * 10");
-                        System.out.println();
-                    }
-                    case "T" -> {
-                        System.out.println(type);
-                        System.out.println(plateau[i].getNom());
-                        System.out.println("Valeur : " + plateau[i].getPrix());
-                        System.out.println("Loyer : " + plateau[i].getLoyer());
-                        System.out.println();
-                    }
-                }
-                i++;
+            //Remettre à 0 si dépasse la longueur du plateau
+            if (joueur.getPosition() > plateau.length) {
+                joueur.setPosition(0);
             }
 
+            String type = plateau[i].getType();
+            switch (type) {
+                case "D" -> {
+                    joueur.ajouterArgent(50);
+                    System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                }
+                case "Tx" -> {
+                    plateau[i].payerTaxe(joueur);
+                    System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                }
+                case "P" -> {
+                    plateau[i].payerStationnement(joueur);
+                    System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                }
+                case "SP" -> {
+                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
+                        joueur.retirerArgent(resultatde * 10);
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    } else if (plateau[i].getProprietaire() == joueur) {
+                        System.out.println("Ce service public vous appartient.");
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    } else {
+                        if (joueur.getArgent() > plateau[i].getLoyer()) {
+                            joueur.retirerArgent(plateau[i].getLoyer());
+                        } else {
+                            System.out.println(joueur.getNom() + ", vous avez fait faillite.");
+                            //Partie terminée
+                            quitter();
+                        }
+                    }
+                }
+                case "T" -> {
+                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
+                        joueur.retirerArgent(plateau[i].getLoyer());
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    } else if (plateau[i].getProprietaire() == joueur) {
+                        System.out.println("Ce terrain vous appartient.");
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    } else {
+                        if (joueur.getArgent() > plateau[i].getLoyer()) {
+                            joueur.retirerArgent(plateau[i].getLoyer());
+                        } else {
+                            System.out.println(joueur.getNom() + ", vous avez fait faillite.");
+                            //Partie terminée
+                            quitter();
+                        }
+                    }
+                }
+            }
         }
+
+    }
+
+//    case "D" -> {
+//        joueur.ajouterArgent(50);
+//    }
+//                case "Tx", "P" -> {
+//        System.out.println(type);
+//        System.out.println(plateau[i].getNom());
+//        System.out.println(plateau[i].getDescription());
+//        System.out.println(plateau[i].getMontantdelacase());
+//        System.out.println();
+//    }
+//                case "SP" -> {
+//        System.out.println(type);
+//        System.out.println(plateau[i].getNom());
+//        System.out.println("Valeur : " + plateau[i].getPrix());
+//        System.out.println("Loyer : Valeur du dé * 10");
+//        System.out.println();
+//    }
+//                case "T" -> {
+//        System.out.println(type);
+//        System.out.println(plateau[i].getNom());
+//        System.out.println("Valeur : " + plateau[i].getPrix());
+//        System.out.println("Loyer : " + plateau[i].getLoyer());
+//        System.out.println();
+//    }
 
     public static void tab() {
         try (DataInputStream reader = new DataInputStream(new FileInputStream("src/plateau.bin"))) {
