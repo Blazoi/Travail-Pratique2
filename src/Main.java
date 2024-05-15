@@ -6,11 +6,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
+        menu();
         Case[] rnd = new Case[2];
         LinkedList<Joueur> liste = new LinkedList<>();
         tourmenu(new DePipe(), rnd, new Joueur(""), liste);
-        menu();
+
     }
 
     public static void menu() {
@@ -52,6 +52,7 @@ public class Main {
     public static void jouer(String nomfichier) {
         //Initialiser le plateau
         Case[] plateau = initialiserTableau(nomfichier);
+
         if (validerPlateau(plateau)) {
 
             //Initialiser les joueurs
@@ -138,10 +139,10 @@ public class Main {
         while (nmbdejoueurs < 5) {
             //Nom du joueur
             System.out.print("Joueur " + (nmbdejoueurs + 1) + ": ");
-            String ligne = sc.nextLine();
-            
+            String nom = sc.nextLine();
+
             //Minimum de 2 joueurs
-            if (ligne.isBlank()) {
+            if (nom.isBlank()) {
                 if (nmbdejoueurs < 2) {
                     System.out.println("Vous avez besoin d'au moins 2 joueurs.");
                     nmbdejoueurs--;
@@ -151,22 +152,23 @@ public class Main {
             }
 
             //Ajout du joueurs à la liste
-            liste.add(new Joueur(ligne));
+            liste.add(new Joueur(nom));
+            if (nmbdejoueurs == 0)
+                liste.peek().setPremierJoueur();
             nmbdejoueurs++;
         }
-        liste.get(0).setPremierJoueur(true);
+
         return liste;
     }
 
     public static void tourmenu(DePipe de, Case[] plateau, Joueur joueur, LinkedList<Joueur> liste) {
 
-//        afficherPlateau(plateau);
-        if (joueur.estPremierJoueur()){
+        if (joueur.estPremierJoueur()) {
             afficherPlateau(plateau);
-        }
 //        afficherJoueurs(liste);
+        }
 
-        System.out.println("\033[93mC'est à " + joueur + " de jouer\033[39m");
+        System.out.println("\033[93mC'est à " + joueur.getNom() + " de jouer\033[39m");
         System.out.println();
 
         Scanner sc = new Scanner(System.in);
