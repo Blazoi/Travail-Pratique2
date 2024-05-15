@@ -5,10 +5,16 @@ public class Joueur implements Serializable {
     private boolean plusdunepropriete = false;
     private int argent;
     private boolean estPremierJoueur = false;
+    private int position;
     public Joueur(String nom) {
         this.nom = nom;
         this.argent = 500;
     }
+    public String getNom(){
+        return nom;
+    }
+    public int getPosition(){return position;}
+    public void setPosition(int position){this.position = position;}
     public boolean getnmbpropriete(){
         return plusdunepropriete;
     }
