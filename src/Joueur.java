@@ -16,13 +16,16 @@ public class Joueur implements Serializable {
     public int getArgent(){
         return argent;
     }
+    public String getNom() {
+        return nom;
+    }
     public void setArgent(int montant) {
         argent += montant;
     }
     public boolean estPremierJoueur() {
         return estPremierJoueur;
     }
-    public void setPremierJoueur(boolean bool) {
+    public void setPremierJoueur() {
         estPremierJoueur = true;
     }
 }
