@@ -28,6 +28,7 @@ public abstract class Propriete extends Case {
         return prix;
     }
     public int getLoyer() {
+        proprietaire.ajouterArgent(loyer);
         return loyer;
     }
 }

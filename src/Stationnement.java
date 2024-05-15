@@ -4,14 +4,4 @@ public class Stationnement extends Case {
         super(type, nom, description, 0, montantapayer);
         this.description = description;
     }
-
-    @Override
-    public void setUnProprietaire(Joueur joueur) {
-
-    }
-
-    @Override
-    public void setProprietaire(Joueur joueur) {
-
-    }
 }

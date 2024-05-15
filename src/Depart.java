@@ -6,13 +6,4 @@ public class Depart extends Case {
 //        this.description = description;
     }
 
-    @Override
-    public void setUnProprietaire(Joueur joueur) {
-
-    }
-
-    @Override
-    public void setProprietaire(Joueur joueur) {
-
-    }
 }
