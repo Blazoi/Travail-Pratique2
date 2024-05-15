@@ -28,7 +28,7 @@ public class Joueur implements Serializable {
     public boolean estPremierJoueur() {
         return estPremierJoueur;
     }
-    public void setPremierJoueur(boolean bool) {
+    public void setPremierJoueur() {
         estPremierJoueur = true;
     }
 }
