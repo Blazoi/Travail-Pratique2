@@ -256,10 +256,18 @@ public class Main {
         //Switch pour déterminer les actions selon la case
         //D-Gagner de l'argent
         //Le reste - Perdre de l'argent
-        for (int i = joueur.getPosition(); i != joueur.getPosition() + resultatde; i++) {
+        int positionfinale = 0;
+        if (joueur.getPosition() + resultatde <= plateau.length) {
+            positionfinale = joueur.getPosition() + resultatde;
+        } else {
+            positionfinale = (joueur.getPosition() + resultatde) - plateau.length;
+        }
+        for (int i = joueur.getPosition(); i != positionfinale; i++) {
             joueur.setPosition(joueur.getPosition() + 1);
             //Remettre à 0 si dépasse la longueur du plateau
-            if (joueur.getPosition() > plateau.length) {joueur.setPosition(0);}
+            if (joueur.getPosition() > plateau.length) {
+                joueur.setPosition(0);
+            }
 
             String type = plateau[i].getType();
             switch (type) {
@@ -267,19 +275,23 @@ public class Main {
                     joueur.ajouterArgent(50);
                     System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                 }
-                case "Tx", "P" -> {
-                    joueur.retirerArgent(plateau[i].getLoyer());
+                case "Tx" -> {
+                    plateau[i].payerTaxe(joueur);
+                    System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                }
+                case "P" -> {
+                    plateau[i].payerStationnement(joueur);
                     System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                 }
                 case "SP" -> {
-                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur){
+                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
                         joueur.retirerArgent(resultatde * 10);
                         System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                     } else if (plateau[i].getProprietaire() == joueur) {
                         System.out.println("Ce service public vous appartient.");
                         System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                     } else {
-                        if (joueur.getArgent() > plateau[i].getLoyer()){
+                        if (joueur.getArgent() > plateau[i].getLoyer()) {
                             joueur.retirerArgent(plateau[i].getLoyer());
                         } else {
                             System.out.println(joueur.getNom() + ", vous avez fait faillite.");
@@ -289,14 +301,14 @@ public class Main {
                     }
                 }
                 case "T" -> {
-                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur){
+                    if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
                         joueur.retirerArgent(plateau[i].getLoyer());
                         System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                     } else if (plateau[i].getProprietaire() == joueur) {
                         System.out.println("Ce terrain vous appartient.");
                         System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                     } else {
-                        if (joueur.getArgent() > plateau[i].getLoyer()){
+                        if (joueur.getArgent() > plateau[i].getLoyer()) {
                             joueur.retirerArgent(plateau[i].getLoyer());
                         } else {
                             System.out.println(joueur.getNom() + ", vous avez fait faillite.");

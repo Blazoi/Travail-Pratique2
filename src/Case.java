@@ -48,5 +48,7 @@ public abstract class Case {
             joueur.setMort();
         }
     }
+    public void payerTaxe(Joueur joueur){};
+    public void payerStationnement(Joueur joueur){};
 
 }

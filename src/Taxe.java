@@ -7,8 +7,9 @@ public class Taxe extends Case {
         this.description = description;
         this.taxe = montantapayer;
     }
+
     @Override
-    public int payerLoyer(){
-        return taxe;
+    public void payerTaxe(Joueur joueur) {
+        joueur.retirerArgent(taxe);
     }
 }
