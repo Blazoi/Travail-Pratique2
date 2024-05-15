@@ -6,6 +6,7 @@ public class Joueur implements Serializable {
     private int argent;
     private boolean estPremierJoueur = false;
     private int position;
+    private boolean vivant = true;
     public Joueur(String nom) {
         this.nom = nom;
         this.argent = 500;
@@ -23,6 +24,12 @@ public class Joueur implements Serializable {
         return argent;
     }
     public void setArgent(int montant) {
+        argent = montant;
+    }
+    public void ajouterArgent(int montant) {
+        argent += montant;
+    }
+    public void retirerArgent(int montant) {
         argent += montant;
     }
     public boolean estPremierJoueur() {
@@ -31,4 +38,6 @@ public class Joueur implements Serializable {
     public void setPremierJoueur() {
         estPremierJoueur = true;
     }
+    public boolean estVivant(){return vivant;}
+    public void setMort(){vivant = false;}
 }
