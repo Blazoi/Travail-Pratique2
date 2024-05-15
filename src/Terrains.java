@@ -5,4 +5,9 @@ public class Terrains extends Propriete {
         super(type, nom ,valeur, loyer);
         this.valeur = valeur;
     }
+
+    @Override
+    public void setUnProprietaire(Joueur joueur) {
+
+    }
 }
