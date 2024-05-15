@@ -40,12 +40,15 @@ public abstract class Case {
         return aUnProprietaire;
     }
     public void payerLoyer(Joueur joueur, int loyer){
-        if (joueur.getArgent() > loyer){
-            joueur.setArgent(joueur.getArgent() * -1);
-        } else if (joueur.getArgent() > 0){
-            joueur.setArgent(loyer * -1);
+        //S'il a assez d'argent
+        if (joueur.getArgent() >= loyer){
+            joueur.retirerArgent(loyer);
+        } // S'il n'a pas assez
+        else if (joueur.getArgent() > 0){
+            joueur.setArgent(0);
         } else {
             System.out.println(joueur.getNom() + " est éliminé.");
+            joueur.setMort();
         }
     }
 
