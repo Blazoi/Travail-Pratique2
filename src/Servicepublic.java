@@ -12,4 +12,8 @@ public class Servicepublic extends Propriete {
         this.valeur = valeur;
     }
 
+    @Override
+    public void setUnProprietaire(Joueur joueur) {
+
+    }
 }
