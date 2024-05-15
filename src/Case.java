@@ -3,6 +3,7 @@ public abstract class Case {
     private String nom;
     private String description;
     private int montantdelacase;
+    private boolean aUnProprietaire = false;
     public Case (String type, String nom, String description, int valeur, int montantapayer){
         this.type = type;
         this.nom = nom;
@@ -22,11 +23,30 @@ public abstract class Case {
         return montantdelacase;
     }
 
+    public abstract void setUnProprietaire(Joueur joueur);
+
+    public abstract void setProprietaire(Joueur joueur);
+
     public int getPrix() {
         return 0;
     }
     public int getLoyer() {
         return 0;
+    }
+//    public int getTaxe(int taxe){return taxe;}
+    public void setProprietaire(){};
+    public void setaUnProprietaire(boolean bool){aUnProprietaire = bool;}
+    public boolean getaUnProprietaire() {
+        return aUnProprietaire;
+    }
+    public void payerLoyer(Joueur joueur, int loyer){
+        if (joueur.getArgent() > loyer){
+            joueur.setArgent(joueur.getArgent() * -1);
+        } else if (joueur.getArgent() > 0){
+            joueur.setArgent(loyer * -1);
+        } else {
+            System.out.println(joueur.getNom() + " est éliminé.");
+        }
     }
 
 }
