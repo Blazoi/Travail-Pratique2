@@ -19,11 +19,6 @@ public abstract class Propriete extends Case {
         return loyer;
     }
 
-    @Override
-    public void setProprietaire(Joueur joueur) {
-        proprietaire = joueur;
-    }
-
     public int getPrix() {
         return prix;
     }
@@ -31,4 +26,6 @@ public abstract class Propriete extends Case {
         proprietaire.ajouterArgent(loyer);
         return loyer;
     }
+
+    public abstract void setUnProprietaire(Joueur joueur);
 }
