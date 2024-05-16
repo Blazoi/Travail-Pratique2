@@ -6,11 +6,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        tab();
-
-        Case[] rnd = new Case[2];
-        LinkedList<Joueur> liste = new LinkedList<>();
-        tourmenu(new DePipe(), rnd, new Joueur("asd"), liste);
         menu();
     }
 
@@ -38,8 +33,7 @@ public class Main {
                 if (!nomfichier.startsWith("src/")) {
                     nomfichier = "src/" + nomfichier;
                 }
-                jouer("src/plateau.bin");
-
+                jouer(nomfichier);
                 break;
             case 2:
                 break;
@@ -54,7 +48,6 @@ public class Main {
         //Initialiser le plateau
         Case[] plateau = initialiserTableau(nomfichier);
         if (validerPlateau(plateau)) {
-
             //Initialiser les joueurs
             LinkedList<Joueur> liste = listeDeJoueurs();
             while (true) {
@@ -153,9 +146,9 @@ public class Main {
 
             //Ajout du joueurs à la liste
             liste.add(new Joueur(nom));
-            if (nmbdejoueurs == 0)
+            if (nmbdejoueurs == 0) {
                 liste.peek().setPremierJoueur();
-            nmbdejoueurs++;
+            }
             nmbdejoueurs++;
         }
         return liste;
@@ -210,31 +203,31 @@ public class Main {
 
     private static void afficherPlateau(Case[] plateau) {
         System.out.println("\033[95m************** Le Plateau **************");
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < plateau.length; i++) {
             String type = plateau[i].getType();
             switch (type) {
                 case "D", "Tx", "P" -> {
                     System.out.print(i);
-                    System.out.print(type);
-                    System.out.print(plateau[i].getNom());
-                    System.out.print(plateau[i].getDescription());
-                    System.out.print(plateau[i].getMontantdelacase());
+                    System.out.print(" " + type);
+                    System.out.print(" " + plateau[i].getNom());
+                    System.out.print(" " + plateau[i].getDescription());
+                    System.out.print(" " + plateau[i].getMontantdelacase());
                     System.out.println();
                 }
                 case "SP" -> {
                     System.out.print(i);
-                    System.out.print(type);
-                    System.out.print(plateau[i].getNom());
-                    System.out.print("Valeur : " + plateau[i].getPrix());
-                    System.out.print("Loyer : Valeur du dé * 10");
+                    System.out.print(" " + type);
+                    System.out.print(" " + plateau[i].getNom());
+                    System.out.print("  : " + plateau[i].getPrix());
+                    System.out.print(" Loyer : Valeur du dé * 10");
                     System.out.println();
                 }
                 case "T" -> {
                     System.out.print(i);
-                    System.out.print(type);
-                    System.out.print(plateau[i].getNom());
-                    System.out.print("Valeur : " + plateau[i].getPrix());
-                    System.out.print("Loyer : " + plateau[i].getLoyer());
+                    System.out.print(" " + type);
+                    System.out.print(" " + plateau[i].getNom());
+                    System.out.print(" Valeur : " + plateau[i].getPrix());
+                    System.out.print(" Loyer : " + plateau[i].getLoyer());
                     System.out.println();
                 }
             }

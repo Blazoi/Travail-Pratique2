@@ -23,8 +23,12 @@ public abstract class Propriete extends Case {
         return prix;
     }
     public int getLoyer() {
-        proprietaire.ajouterArgent(loyer);
         return loyer;
+    }
+
+    @Override
+    public void payerLoyer(Joueur joueur, int loyer) {
+        super.payerLoyer(joueur, this.loyer);
     }
 
     public abstract void setUnProprietaire(Joueur joueur);
