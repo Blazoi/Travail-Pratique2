@@ -10,7 +10,7 @@ public class Servicepublic extends Propriete {
     }
 
     @Override
-    public void setUnProprietaire(Joueur joueur) {
-
+    public int getPrix() {
+        return valeur;
     }
 }

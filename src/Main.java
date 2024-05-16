@@ -243,7 +243,7 @@ public class Main {
         System.out.println("\033[39m");
     }
 
-    private static void quitter() {
+    public static void quitter() {
         System.out.println("""
                 Vous avez quitté Montrealopoly
                 Merci d'avoir joué!
@@ -252,10 +252,7 @@ public class Main {
     }
 
     public static void avancer(Case[] plateau, int resultatde, Joueur joueur) {
-        //Un attribut pour la position dans joueur.
-        //Switch pour déterminer les actions selon la case
-        //D-Gagner de l'argent
-        //Le reste - Perdre de l'argent
+        //Déterminer la dernière case
         int positionfinale = 0;
         if (joueur.getPosition() + resultatde <= plateau.length) {
             positionfinale = joueur.getPosition() + resultatde;
@@ -276,8 +273,13 @@ public class Main {
                     System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                 }
                 case "Tx" -> {
-                    plateau[i].payerTaxe(joueur);
-                    System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    if (positionfinale == i) {
+                        plateau[i].payerTaxe(joueur, 1);
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    } else {
+                        plateau[i].payerTaxe(joueur, 0.1);
+                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                    }
                 }
                 case "P" -> {
                     plateau[i].payerStationnement(joueur);
