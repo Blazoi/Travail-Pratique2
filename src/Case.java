@@ -84,7 +84,7 @@ public abstract class Case {
     public void payerStationnement(Joueur joueur) {
     }
 
-    public void survolerCase(Case[] plateau, int resultatde, Joueur joueur) {
+    public static void survolerCase(Case[] plateau, int resultatde, Joueur joueur) {
         Scanner sc = new Scanner(System.in);
         //Déterminer la dernière case
         int positionfinale = 0;
