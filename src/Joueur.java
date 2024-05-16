@@ -6,6 +6,7 @@ public class Joueur implements Serializable {
     private int argent;
     private boolean estPremierJoueur = false;
     private int position;
+    private int dernierePosition;
     private boolean vivant = true;
     public Joueur(String nom) {
         this.nom = nom;
@@ -15,7 +16,17 @@ public class Joueur implements Serializable {
         return nom;
     }
     public int getPosition(){return position;}
+
+    public int getDernierePosition() {
+        return dernierePosition;
+    }
+
     public void setPosition(int position){this.position = position;}
+
+    public void setDernierePosition(int dernierePosition) {
+        this.dernierePosition = dernierePosition;
+    }
+
     public boolean getnmbpropriete(){
         return plusdunepropriete;
     }
@@ -29,7 +40,7 @@ public class Joueur implements Serializable {
     public void ajouterArgent(int montant) {
         argent += montant;
     }
-    public void retirerArgent(int montant) {
+    public void retirerArgent(double montant) {
         argent -= montant;
     }
     public boolean estPremierJoueur() {

@@ -8,8 +8,10 @@ public class Taxe extends Case {
         this.taxe = montantapayer;
     }
 
+
+
     @Override
-    public void payerTaxe(Joueur joueur) {
-        joueur.retirerArgent(taxe);
+    public int getTaxe() {
+        return taxe;
     }
 }
