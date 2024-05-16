@@ -145,9 +145,13 @@ public class Main {
             }
 
             //Ajout du joueurs à la liste
-            liste.add(new Joueur(nom));
+            if (!nom.isBlank()) {
+                liste.add(new Joueur(nom));
+            }
             if (nmbdejoueurs == 0) {
-                liste.peek().setPremierJoueur();
+                if (liste.get(0) != null) {
+                    liste.peek().setPremierJoueur();
+                }
             }
             nmbdejoueurs++;
         }
@@ -198,7 +202,6 @@ public class Main {
         for (int i = 0; i < joueurs.size(); i++) {
             System.out.println(joueurs.get(i).getNom() + " est sur la case " + plateau[joueurs.get(i).getPosition()].getNom() + " et possède $" + joueurs.get(i).getArgent());
         }
-        System.out.println("Le prochain joueur est " + joueurs.peek() + ".");
     }
 
     private static void afficherPlateau(Case[] plateau) {
@@ -206,12 +209,20 @@ public class Main {
         for (int i = 0; i < plateau.length; i++) {
             String type = plateau[i].getType();
             switch (type) {
-                case "D", "Tx", "P" -> {
+                case "D", "Tx" -> {
                     System.out.print(i);
                     System.out.print(" " + type);
                     System.out.print(" " + plateau[i].getNom());
                     System.out.print(" " + plateau[i].getDescription());
-                    System.out.print(" " + plateau[i].getMontantdelacase());
+                    System.out.print(" $" + plateau[i].getMontantdelacase());
+                    System.out.println();
+                }
+                case "P" -> {
+                    System.out.print(i);
+                    System.out.print(" " + type);
+                    System.out.print(" " + plateau[i].getNom());
+                    System.out.print(" " + plateau[i].getDescription());
+                    System.out.print("Valeur du ticket : $" + plateau[i].getMontantdelacase());
                     System.out.println();
                 }
                 case "SP" -> {
@@ -241,40 +252,5 @@ public class Main {
                 Merci d'avoir joué!
                 """);
         System.exit(0);
-    }
-
-    public static void tab() {
-        try (DataInputStream reader = new DataInputStream(new FileInputStream("src/plateau.bin"))) {
-            int i = 1;
-            while (i != 15) {
-                String s = reader.readUTF();
-                switch (s) {
-                    case "D", "Tx", "P" -> {
-                        System.out.println(s);
-                        System.out.println(reader.readUTF());
-                        System.out.println(reader.readUTF());
-                        System.out.println(reader.readInt());
-                        System.out.println();
-                    }
-                    case "SP" -> {
-                        System.out.println(s);
-                        System.out.println(reader.readUTF());
-                        System.out.println("Valeur : " + reader.readInt());
-                        System.out.println("Loyer : Valeur du dé * 10");
-                        System.out.println();
-                    }
-                    case "T" -> {
-                        System.out.println(s);
-                        System.out.println(reader.readUTF());
-                        System.out.println("Valeur : " + reader.readInt());
-                        System.out.println("Loyer : " + reader.readInt());
-                        System.out.println();
-                    }
-                }
-                i++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

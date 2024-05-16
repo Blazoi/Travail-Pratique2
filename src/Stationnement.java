@@ -6,7 +6,6 @@ public class Stationnement extends Case {
         this.description = description;
         this.stationnement = montantapayer;
     }
-
     @Override
     public void payerStationnement(Joueur joueur) {
         joueur.retirerArgent(stationnement);

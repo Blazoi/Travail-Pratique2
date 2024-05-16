@@ -19,13 +19,6 @@ public abstract class Propriete extends Case {
         return loyer;
     }
 
-    public int getPrix() {
-        return prix;
-    }
-    public int getLoyer() {
-        return loyer;
-    }
-
     @Override
     public void payerLoyer(Joueur joueur, int loyer) {
         super.payerLoyer(joueur, this.loyer);

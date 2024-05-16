@@ -8,8 +8,6 @@ public class Taxe extends Case {
         this.taxe = montantapayer;
     }
 
-
-
     @Override
     public int getTaxe() {
         return taxe;

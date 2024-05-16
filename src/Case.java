@@ -9,12 +9,14 @@ public abstract class Case {
     private Joueur proprietaire;
     private int montantdelacase;
     private boolean aUnProprietaire = false;
+    private int valeur;
 
     public Case(String type, String nom, String description, int valeur, int montantapayer) {
         this.type = type;
         this.nom = nom;
         this.description = description;
         this.montantdelacase = montantapayer;
+        this.valeur = valeur;
     }
 
     public String getType() {
@@ -34,11 +36,15 @@ public abstract class Case {
     }
 
     public int getPrix() {
-        return 0;
+        return valeur;
     }
 
     public int getLoyer() {
-        return 0;
+        return montantdelacase;
+    }
+
+    public void setLoyer(int montant) {
+        montantdelacase = montant;
     }
 
     public Joueur getProprietaire() {
@@ -95,7 +101,7 @@ public abstract class Case {
         }
 
         //Survoler les cases
-        for (int i = joueur.getPosition(); i != positionfinale; i++) {
+        for (int i = joueur.getPosition() + 1; i != positionfinale; i++) {
             joueur.setPosition(joueur.getPosition() + 1);
             //Remettre à 0 si dépasse la longueur du plateau
             if (joueur.getPosition() > plateau.length) {
@@ -107,12 +113,14 @@ public abstract class Case {
             switch (type) {
                 case "D" -> {
                     joueur.ajouterArgent(50);
+                    System.out.println("Vous avez gagné un salaire de $50.");
                     System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                 }
                 case "Tx" -> {
                     if (positionfinale == i) {
                         if (joueur.getArgent() > plateau[i].getTaxe()) {
                             plateau[i].payerTaxe(joueur);
+                            System.out.println("Vous avez payé $" + plateau[i].getTaxe() + " en taxes.");
                             System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                         } else {
                             System.out.println(joueur.getNom() + " a fait faillite. La partie est terminée.");
@@ -122,6 +130,7 @@ public abstract class Case {
                         double taxe = 0.1 * plateau[i].getTaxe();
                         if (joueur.getArgent() > plateau[i].getTaxe()) {
                             joueur.retirerArgent(plateau[i].getTaxe() * 0.1);
+                            System.out.println("Vous avez payé $" + plateau[i].getTaxe() + " en taxes.");
                             System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                         } else {
                             System.out.println(joueur.getNom() + " a fait faillite. La partie est terminée.");
@@ -139,22 +148,37 @@ public abstract class Case {
 
                         DePipe de = new DePipe();
                         int resultat = de.lancer();
-                        int taxe = resultat * 15;
+                        int taxe = resultat * plateau[i].valeur;
                         switch (resultat) {
                             case 2 -> {
-                                System.out.println("Stationnement interdit les jours de la semaine.");
-                                System.out.println("Vous devez payer $" + taxe);
-                                joueur.retirerArgent(taxe);
+                                if (joueur.getArgent() >= taxe) {
+                                    System.out.println("Stationnement interdit les jours de la semaine.");
+                                    System.out.println("Vous devez payer $" + taxe);
+                                    joueur.retirerArgent(taxe);
+                                } else {
+                                    System.out.println("Vous avez fait faillite.");
+                                    Main.quitter();
+                                }
                             }
                             case 4 -> {
-                                System.out.println("Stationnement réservé aux détenteurs de permis.");
-                                System.out.println("Vous devez payer $" + taxe);
-                                joueur.retirerArgent(taxe);
+                                if (joueur.getArgent() >= taxe) {
+                                    System.out.println("Stationnement réservé aux détenteurs de permis.");
+                                    System.out.println("Vous devez payer $" + taxe);
+                                    joueur.retirerArgent(taxe);
+                                } else {
+                                    System.out.println("Vous avez fait faillite.");
+                                    Main.quitter();
+                                }
                             }
                             case 6 -> {
-                                System.out.println("Place réservée aux handicapés.");
-                                System.out.println("Vous devez payer $" + taxe);
-                                joueur.retirerArgent(taxe);
+                                if (joueur.getArgent() >= taxe) {
+                                    System.out.println("Place réservée aux handicapés.");
+                                    System.out.println("Vous devez payer $" + taxe);
+                                    joueur.retirerArgent(taxe);
+                                } else {
+                                    System.out.println("Vous avez fait faillite.");
+                                    Main.quitter();
+                                }
                             }
                             default -> {
                                 System.out.println("Vous n'avez rien.");
@@ -168,6 +192,7 @@ public abstract class Case {
                     if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
                         joueur.retirerArgent(resultatde * 10);
                         plateau[i].getProprietaire().ajouterArgent(resultatde * 10);
+                        System.out.println("Vous devez payer $" + resultatde * 10);
                         System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
                     } // Si le proprio est le joueur
                     else if (plateau[i].getProprietaire() == joueur) {
@@ -176,6 +201,7 @@ public abstract class Case {
                     } // Si elle a pas de proprio et que le joueur a assez d'argent
                     else if (!plateau[i].getaUnProprietaire() && joueur.getArgent() > plateau[i].getPrix()) {
                         //Set le proprio
+                        System.out.println("Vous achetez ce service public pour $" + plateau[i].getPrix());
                         plateau[i].setProprietaire(joueur);
                         //Achat
                         joueur.retirerArgent(plateau[i].getPrix());
@@ -186,21 +212,28 @@ public abstract class Case {
                 case "T" -> {
                     //Si elle a un propriétaire et que le propriétaire n'est pas le joueur
                     if (plateau[i].getaUnProprietaire() && plateau[i].getProprietaire() != joueur) {
-                        joueur.retirerArgent(plateau[i].getLoyer());
-                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                        if (joueur.getArgent() >= plateau[i].getLoyer()) {
+                            if (joueur.getnmbpropriete()) {
+                                joueur.retirerArgent(plateau[i].getLoyer() * 2);
+                                System.out.println("Vous devez payer $" + (plateau[i].getLoyer() * 2));
+                                System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                            } else {
+                                joueur.retirerArgent(plateau[i].getLoyer());
+                                System.out.println("Vous devez payer $" + plateau[i].getLoyer());
+                                System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                            }
+                        } else {
+                            System.out.println(joueur.getNom() + ", vous avez fait faillite.");
+                            Main.quitter();
+                        }
                     } // Si le proprio est le joueur
                     else if (plateau[i].getProprietaire() == joueur) {
                         System.out.println("Ce terrain vous appartient.");
-                        System.out.println(joueur.getNom() + ", vous avez maintenant $" + joueur.getArgent());
+                        System.out.println(joueur.getNom() + ", vous avez $" + joueur.getArgent());
                     } //Si elle n'a pas de proprio et que le joueur a assez d'argent pour l'acheter
                     else if (!plateau[i].getaUnProprietaire() && joueur.getArgent() > plateau[i].getPrix()) {
-                        if (joueur.getArgent() > plateau[i].getLoyer()) {
-                            joueur.retirerArgent(plateau[i].getLoyer());
-                        } else {
-                            System.out.println(joueur.getNom() + ", vous avez fait faillite.");
-                            //Partie terminée
-                            Main.quitter();
-                        }
+                        joueur.retirerArgent(plateau[i].getPrix());
+                        joueur.augmenterlesproprietes();
                     } //Aucun proprio mais pas assez d'argent pour l'acheter
                     else {
                         System.out.println("Vous n'avez pas assez d'argent pour acheter cette propriété.");
